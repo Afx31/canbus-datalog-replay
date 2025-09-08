@@ -1,8 +1,3 @@
-// HOW THIS WORKS
-// 1. Read in entire CSV file, store in structs
-// 2. Once read in, iterate over and send onto vcan0
-
-
 package main
 
 import (
@@ -15,6 +10,8 @@ import (
 
 const (
 	SETTINGS_ECU = "kpro"
+	SETTINGS_CAN = "vcan0"
+	SETTINGS_HZ  = 10
 )
 
 type FrameMisc struct {
@@ -31,7 +28,7 @@ type Frame661 struct {
 	Ect uint16
 	Mil uint8
 	Vts uint8
-	Cl uint8
+	Cl  uint8
 }
 type Frame662 struct {
 	Tps uint16
@@ -65,12 +62,12 @@ type Frame668 struct {
 }
 type Frame669S300 struct {
 	Frequency uint8
-	Duty uint8
-	Content float64
+	Duty      uint8
+	Content   float64
 }
 type Frame669KPRO struct {
-	Frequency uint8
-	EthanolContent uint8
+	Frequency       uint8
+	EthanolContent  uint8
 	FuelTemperature uint16
 }
 
@@ -80,9 +77,9 @@ var (
 	}}
 
 	frame660 = []Frame660{{
-		Rpm: 0,
-		Speed: 0,
-		Gear: 0,
+		Rpm:     0,
+		Speed:   0,
+		Gear:    0,
 		Voltage: 0,
 	}}
 
@@ -91,7 +88,7 @@ var (
 		Ect: 0,
 		Mil: 0,
 		Vts: 0,
-		Cl: 0,
+		Cl:  0,
 	}}
 
 	frame662 = []Frame662{{
@@ -133,13 +130,13 @@ var (
 
 	frame669S300 = []Frame669S300{{
 		Frequency: 0,
-		Duty: 0,
-		Content: 0,
+		Duty:      0,
+		Content:   0,
 	}}
 
 	frame669KPRO = []Frame669KPRO{{
-		Frequency: 0,
-		EthanolContent: 0,
+		Frequency:       0,
+		EthanolContent:  0,
 		FuelTemperature: 0,
 	}}
 )
@@ -179,7 +176,6 @@ func main() {
 	}
 	defer file.Close()
 
-
 	// Create new CSV reader
 	reader := csv.NewReader(file)
 
@@ -190,16 +186,14 @@ func main() {
 			break //EOF
 		}
 		if lineCounter >= 3 {
-			fmt.Println(record[0])
-
 			frameMisc = append(frameMisc, FrameMisc{
 				Hertz: toFloat64(record[0]),
 			})
 
 			frame660 = append(frame660, Frame660{
-				Rpm: toUint16(record[1]),
-				Speed: toUint16(record[2]),
-				Gear: toUint8(record[3]),
+				Rpm:     toUint16(record[1]),
+				Speed:   toUint16(record[2]),
+				Gear:    toUint8(record[3]),
 				Voltage: toUint8(record[4]),
 			})
 
@@ -208,7 +202,7 @@ func main() {
 				Ect: toUint16(record[6]),
 				Mil: toUint8(record[7]),
 				Vts: toUint8(record[8]),
-				Cl: toUint8(record[9]),
+				Cl:  toUint8(record[9]),
 			})
 
 			frame662 = append(frame662, Frame662{
@@ -251,13 +245,13 @@ func main() {
 			if SETTINGS_ECU == "s300" {
 				frame669S300 = append(frame669S300, Frame669S300{
 					Frequency: toUint8(record[26]),
-					Duty: toUint8(record[27]),
-					Content: toFloat64(record[28]),
+					Duty:      toUint8(record[27]),
+					Content:   toFloat64(record[28]),
 				})
 			} else if SETTINGS_ECU == "kpro" {
 				frame669KPRO = append(frame669KPRO, Frame669KPRO{
-					Frequency: toUint8(record[26]),
-					EthanolContent: toUint8(record[27]),
+					Frequency:       toUint8(record[26]),
+					EthanolContent:  toUint8(record[27]),
 					FuelTemperature: toUint16(record[28]),
 				})
 			}

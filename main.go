@@ -266,6 +266,7 @@ func main() {
 		lineCounter++
 	}
 
+
 	// Connect to CANBus
 	conn, err := socketcan.DialContext(context.Background(), "can", SETTINGS_CAN)
 	if err != nil {
@@ -277,6 +278,7 @@ func main() {
 	ticker := time.NewTicker(time.Second / time.Duration(SETTINGS_HZ))
 	defer ticker.Stop()
 	i := 0
+
 
 	for range ticker.C {
 		// Create all the can.Frame variables to transmit
@@ -405,6 +407,11 @@ func main() {
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame669)
 
-		i++
+		// Once we've run through the data (lineCounter minus headers), restart
+		if i == lineCounter - 3 {
+			i = 0
+		} else {
+			i++
+		}
 	}
 }

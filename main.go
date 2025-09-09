@@ -147,26 +147,26 @@ var (
 	}}
 )
 
-func toUint8(s string) uint8 {
+func toUint8(s string, frame string) uint8 {
 	v, err := strconv.ParseUint(s, 10, 8)
 	if err != nil {
-		fmt.Println("[ERROR] - toUint8")
+		fmt.Println("[ERROR] - toUint8 | ", s, " | ", frame)
 		return 0
 	}
 	return uint8(v)
 }
-func toUint16(s string) uint16 {
+func toUint16(s string, frame string) uint16 {
 	v, err := strconv.ParseUint(s, 10, 16)
 	if err != nil {
-		fmt.Println("[ERROR] - toUint16")
+		fmt.Println("[ERROR] - toUint16 | ", s, " | ", frame)
 		return 0
 	}
 	return uint16(v)
 }
-func toFloat64(s string) float64 {
+func toFloat64(s string, frame string) float64 {
 	v, err := strconv.ParseFloat(s, 64)
 	if err != nil {
-		fmt.Println("[ERROR] - toFloat64")
+		fmt.Println("[ERROR] - toFloat64 | ", s, " | ", frame)
 		return 0
 	}
 	return float64(v)
@@ -194,72 +194,74 @@ func main() {
 		}
 		if lineCounter >= 3 {
 			frameMisc = append(frameMisc, FrameMisc{
-				Hertz: toFloat64(record[0]),
+				Hertz: toFloat64(record[0], "frameMisc - Hertz"),
 			})
 
 			frame660 = append(frame660, Frame660{
-				Rpm:     toUint16(record[1]),
-				Speed:   toUint16(record[2]),
-				Gear:    toUint8(record[3]),
-				Voltage: toUint8(record[4]),
+				Rpm:   toUint16(record[1], "frame660 - Rpm"),
+				Speed: toUint16(record[2], "frame660 - Speed"),
+				Gear:  toUint8(record[3], "frame660 - Gear"),
+				// Voltage: toUint8(record[4], "frame660 - Voltage"),
+				Voltage: uint8(toFloat64(record[4], "frame660 - Voltage")),
 			})
 
 			frame661 = append(frame661, Frame661{
-				Iat: toUint16(record[5]),
-				Ect: toUint16(record[6]),
-				Mil: toUint8(record[7]),
-				Vts: toUint8(record[8]),
-				Cl:  toUint8(record[9]),
+				Iat: toUint16(record[5], "frame661 - Iat"),
+				Ect: toUint16(record[6], "frame661 - Ect"),
+				Mil: toUint8(record[7], "frame661 - Mil"),
+				Vts: toUint8(record[8], "frame661 - Vts"),
+				Cl:  toUint8(record[9], "frame661 - Cl"),
 			})
 
 			frame662 = append(frame662, Frame662{
-				Tps: toUint16(record[10]),
-				Map: toUint16(record[11]),
+				Tps: toUint16(record[10], "frame662 - Tps"),
+				Map: toUint16(record[11], "frame662 - Map"),
 			})
 
 			frame663 = append(frame663, Frame663{
-				Inj: toUint16(record[12]),
-				Ign: toUint16(record[13]),
+				Inj: toUint16(record[12], "frame663 - Inj"),
+				Ign: toUint16(record[13], "frame663 - Ign"),
 			})
 
 			frame664 = append(frame664, Frame664{
-				LambdaRatio: toUint16(record[14]),
+				// LambdaRatio: toUint16(record[14], "frame664 - LambdaRatio"),
+				LambdaRatio: uint16(toFloat64(record[14], "frame664 - LambdaRatio")),
 			})
 
 			frame665 = append(frame665, Frame665{
-				Knock: toUint16(record[15]),
+				Knock: toUint16(record[15], "frame665 - Knock"),
 			})
 
 			frame666 = append(frame666, Frame666{
-				TargetCamAngle: toFloat64(record[16]),
-				ActualCamAngle: toFloat64(record[17]),
+				TargetCamAngle: toFloat64(record[16], "frame666 - TargetCamAngle"),
+				ActualCamAngle: toFloat64(record[17], "frame666 - ActualCamAngle"),
 			})
 
 			frame667 = append(frame667, Frame667{
-				Analog0: toUint16(record[18]),
-				Analog1: toUint16(record[19]),
-				Analog2: toUint16(record[20]),
-				Analog3: toUint16(record[21]),
+				Analog0: toUint16(record[18], "frame667 - Analog0"),
+				Analog1: toUint16(record[19], "frame667 - Analog1"),
+				Analog2: toUint16(record[20], "frame667 - Analog2"),
+				Analog3: toUint16(record[21], "frame667 - Analog3"),
 			})
 
 			frame668 = append(frame668, Frame668{
-				Analog4: toUint16(record[22]),
-				Analog5: toUint16(record[23]),
-				Analog6: toUint16(record[24]),
-				Analog7: toUint16(record[25]),
+				Analog4: toUint16(record[22], "frame668 - Analog4"),
+				Analog5: toUint16(record[23], "frame668 - Analog5"),
+				Analog6: toUint16(record[24], "frame668 - Analog6"),
+				Analog7: toUint16(record[25], "frame668 - Analog7"),
 			})
 
 			if SETTINGS_ECU == "s300" {
 				frame669S300 = append(frame669S300, Frame669S300{
-					Frequency: toUint8(record[26]),
-					Duty:      toUint8(record[27]),
-					Content:   toFloat64(record[28]),
+					Frequency: toUint8(record[26], "frame669S300 - Frequency"),
+					Duty:      toUint8(record[27], "frame669S300 - Duty"),
+					Content:   toFloat64(record[28], "frame669S300 - Content"),
 				})
 			} else if SETTINGS_ECU == "kpro" {
 				frame669KPRO = append(frame669KPRO, Frame669KPRO{
-					Frequency:       toUint8(record[26]),
-					EthanolContent:  toUint8(record[27]),
-					FuelTemperature: toUint16(record[28]),
+					Frequency:       toUint8(record[26], "frame669KPRO - Frequency"),
+					EthanolContent:  toUint8(record[27], "frame669KPRO - EthanolContent"),
+					FuelTemperature: toUint16(record[28], "frame669KPRO - FuelTemperature"),
 				})
 			}
 		}

@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"time"
@@ -310,10 +311,9 @@ func main() {
 		canFrame660 := can.Frame{
 			ID:     660,
 			Length: 6,
-			Data: b660,
+			Data:   b660,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame660)
-
 
 		var b661 [8]byte
 		binary.BigEndian.PutUint16(b661[0:2], frame661[i].Iat)
@@ -328,59 +328,53 @@ func main() {
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame661)
 
-
 		var b662 [8]byte
 		binary.BigEndian.PutUint16(b662[0:2], frame662[i].Tps)
 		binary.BigEndian.PutUint16(b662[2:4], frame662[i].Map)
 		canFrame662 := can.Frame{
-			ID: 	662,
+			ID:     662,
 			Length: 4,
-			Data: 	b662,
+			Data:   b662,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame662)
-
 
 		var b663 [8]byte
 		binary.BigEndian.PutUint16(b663[0:2], frame663[i].Inj)
 		binary.BigEndian.PutUint16(b663[2:4], frame663[i].Ign)
 		canFrame663 := can.Frame{
-			ID: 	663,
+			ID:     663,
 			Length: 4,
-			Data: 	b663,
+			Data:   b663,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame663)
-
 
 		var b664 [8]byte
 		binary.BigEndian.PutUint16(b664[0:2], frame664[i].LambdaRatio)
 		canFrame664 := can.Frame{
-			ID: 	664,
+			ID:     664,
 			Length: 2,
-			Data: 	b664,
+			Data:   b664,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame664)
-
 
 		var b665 [8]byte
 		binary.BigEndian.PutUint16(b665[0:2], frame665[i].Knock)
 		canFrame665 := can.Frame{
-			ID: 	665,
+			ID:     665,
 			Length: 2,
-			Data: 	b665,
+			Data:   b665,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame665)
-
 
 		var b666 [8]byte
 		binary.BigEndian.PutUint16(b666[0:2], uint16(frame666[i].TargetCamAngle))
 		binary.BigEndian.PutUint16(b666[2:4], uint16(frame666[i].ActualCamAngle))
 		canFrame666 := can.Frame{
-			ID: 	666,
+			ID:     666,
 			Length: 4,
-			Data: 	b666,
+			Data:   b666,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame666)
-
 
 		var b667 [8]byte
 		binary.BigEndian.PutUint16(b667[0:2], frame667[i].Analog0)
@@ -388,12 +382,11 @@ func main() {
 		binary.BigEndian.PutUint16(b667[4:6], frame667[i].Analog2)
 		binary.BigEndian.PutUint16(b667[6:8], frame667[i].Analog3)
 		canFrame667 := can.Frame{
-			ID: 	667,
+			ID:     667,
 			Length: 8,
-			Data: 	b667,
+			Data:   b667,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame667)
-
 
 		var b668 [8]byte
 		binary.BigEndian.PutUint16(b668[0:2], frame668[i].Analog4)
@@ -401,15 +394,13 @@ func main() {
 		binary.BigEndian.PutUint16(b668[4:6], frame668[i].Analog6)
 		binary.BigEndian.PutUint16(b668[6:8], frame668[i].Analog7)
 		canFrame668 := can.Frame{
-			ID: 	668,
+			ID:     668,
 			Length: 8,
-			Data: 	b668,
+			Data:   b668,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame668)
 
-
 		var b669 [8]byte
-
 		if SETTINGS_ECU == "s300" {
 			b669[0] = frame669S300[i].Frequency
 			b669[1] = frame669S300[i].Duty
@@ -420,9 +411,9 @@ func main() {
 			binary.BigEndian.PutUint16(b669[2:4], frame669KPRO[i].FuelTemperature)
 		}
 		canFrame669 := can.Frame{
-			ID: 	669,
+			ID:     669,
 			Length: 8,
-			Data: 	b669,
+			Data:   b669,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame669)
 

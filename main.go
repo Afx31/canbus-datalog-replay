@@ -185,6 +185,7 @@ func main() {
 	// Create new CSV reader
 	reader := csv.NewReader(file)
 
+	fmt.Println("[INFO] Reading in datalog file")
 	lineCounter := 0
 	for {
 		record, err := reader.Read()
@@ -266,19 +267,21 @@ func main() {
 		lineCounter++
 	}
 
-
 	// Connect to CANBus
 	conn, err := socketcan.DialContext(context.Background(), "can", SETTINGS_CAN)
 	if err != nil {
 		log.Fatal("[ERROR] Cannot connect to: ", SETTINGS_CAN)
 	}
 	defer conn.Close()
+	fmt.Println("[INFO] Connected to vcan0")
+
 	tx := socketcan.NewTransmitter(conn)
 
 	ticker := time.NewTicker(time.Second / time.Duration(SETTINGS_HZ))
 	defer ticker.Stop()
 	i := 0
 
+	fmt.Println("[INFO] Transmitting data to CANBus...")
 
 	for range ticker.C {
 		// Create all the can.Frame variables to transmit

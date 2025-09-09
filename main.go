@@ -20,13 +20,17 @@ const (
 	SETTINGS_HZ  = 10
 )
 
+type FrameGpsLapData struct {
+	Latitude  float64
+	Longitude float64
+}
 type FrameMisc struct {
 	Hertz float64
 }
 type Frame660 struct {
-	Rpm uint16
-	Speed uint16
-	Gear uint8
+	Rpm     uint16
+	Speed   uint16
+	Gear    uint8
 	Voltage uint8
 }
 type Frame661 struct {
@@ -78,6 +82,11 @@ type Frame669KPRO struct {
 }
 
 var (
+	frameGpsLapData = []FrameGpsLapData{{
+		Latitude:  0,
+		Longitude: 0,
+	}}
+
 	frameMisc = []FrameMisc{{
 		Hertz: 0,
 	}}
@@ -264,6 +273,11 @@ func main() {
 					FuelTemperature: toUint16(record[28], "frame669KPRO - FuelTemperature"),
 				})
 			}
+
+			frameGpsLapData = append(frameGpsLapData, FrameGpsLapData{
+				Latitude:  toFloat64(record[29], "frameGpsLapData - Latitude"),
+				Longitude: toFloat64(record[30], "frameGpsLapData - Longitude"),
+			})
 		}
 
 		lineCounter++
@@ -411,6 +425,20 @@ func main() {
 			Data: 	b669,
 		}
 		_ = tx.TransmitFrame(context.Background(), canFrame669)
+
+		var b700 [8]byte
+		// TODO: Test data
+		fmt.Println("-----------------------")
+		fmt.Println(frameGpsLapData[i].Latitude)
+		fmt.Println(frameGpsLapData[i].Longitude)
+		binary.BigEndian.PutUint32(b700[0:4], math.Float32bits(float32(frameGpsLapData[i].Latitude)))
+		binary.BigEndian.PutUint32(b700[4:8], math.Float32bits(float32(frameGpsLapData[i].Longitude)))
+		canFrame700 := can.Frame{
+			ID:     6969,
+			Length: 8,
+			Data:   b700,
+		}
+		_ = tx.TransmitFrame(context.Background(), canFrame700)
 
 		// Once we've run through the data (lineCounter minus headers), restart
 		if i == lineCounter - 3 {

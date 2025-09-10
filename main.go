@@ -418,14 +418,10 @@ func main() {
 		_ = tx.TransmitFrame(context.Background(), canFrame669)
 
 		var b700 [8]byte
-		// TODO: Test data
-		fmt.Println("-----------------------")
-		fmt.Println(frameGpsLapData[i].Latitude)
-		fmt.Println(frameGpsLapData[i].Longitude)
 		binary.BigEndian.PutUint32(b700[0:4], math.Float32bits(float32(frameGpsLapData[i].Latitude)))
 		binary.BigEndian.PutUint32(b700[4:8], math.Float32bits(float32(frameGpsLapData[i].Longitude)))
 		canFrame700 := can.Frame{
-			ID:     6969,
+			ID:     700,
 			Length: 8,
 			Data:   b700,
 		}

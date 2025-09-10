@@ -186,7 +186,7 @@ func main() {
 	fmt.Println("---------- CANBus Datalog Replay - Started ----------")
 
 	// Open file
-	file, err := os.Open("testdata.csv")
+	file, err := os.Open("../testdata.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -302,7 +302,7 @@ func main() {
 
 	for range ticker.C {
 		// Create all the can.Frame variables to transmit
-		
+
 		var b660 [8]byte
 		binary.BigEndian.PutUint16(b660[0:2], frame660[i].Rpm)
 		binary.BigEndian.PutUint16(b660[2:4], frame660[i].Speed)
@@ -428,7 +428,7 @@ func main() {
 		_ = tx.TransmitFrame(context.Background(), canFrame700)
 
 		// Once we've run through the data (lineCounter minus headers), restart
-		if i == lineCounter - 3 {
+		if i == lineCounter-3 {
 			i = 0
 		} else {
 			i++

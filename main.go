@@ -18,7 +18,7 @@ import (
 const (
 	SETTINGS_ECU = "kpro"
 	SETTINGS_CAN = "vcan0"
-	SETTINGS_HZ  = 100
+	SETTINGS_HZ  = 10
 )
 
 type FrameGpsLapData struct {
